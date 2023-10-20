@@ -28,11 +28,7 @@ jobs:
       run: |
         curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-    
-    #or
-    # - name: Create k8s Kind Cluster
-    #    uses: helm/kind-action@v1.5.0
-
+   
     - name: End miniKube
       id: end_time_minikube
       run: |
@@ -43,7 +39,7 @@ jobs:
         kubectlversion=$(kubectl version)
         minikubeversion=$(minikube version)
         pods=$(minikube kubectl -- get po -A)
-        nodes=$(minikube nide list)
+        nodes=$(minikube node list)
         echo "kubectl Version: $kubectlversion" > minikube-cluster-info.txt
         echo "miniKube Version: $minikubeversion" >> minikube-cluster-info.txt
         echo "Pods: $pods" >> minikube-cluster-info.txt
