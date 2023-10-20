@@ -31,7 +31,7 @@ jobs:
 #        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
     
     - name: Setup KinD with reaydy action
-       uses: helm/kind-action@v1.5.0
+        uses: helm/kind-action@v1.5.0
 
     - name: end_time_kind
       id: end_time_kind
