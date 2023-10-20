@@ -48,7 +48,7 @@ jobs:
         echo "KinD Version: $kindversion" >> kind-cluster-info.txt
         echo "Pods: $pods" >> kind-cluster-info.txt
         echo "Nodes: $nodes" >> kind-cluster-info.txt
-        echo "Time: $((${{steps.end_time_kind.outputs.end_kind}} - ${{steps.start_time_kind.outputs.start_kind}})) seconds"  >> kind-cluster-info.txt
+        echo "How long spin up (Time): $((${{steps.end_time_kind.outputs.end_kind}} - ${{steps.start_time_kind.outputs.start_kind}})) seconds"  >> kind-cluster-info.txt
       shell: bash
 
     - name: Upload KinD Info
