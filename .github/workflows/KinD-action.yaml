@@ -13,27 +13,27 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: KinD start
+    - name: Start Kind
       id: start_time_kind
       run: |
         echo "start_kind=$(date '+%s')" >> $GITHUB_OUTPUT
 
-#    - name: Setup KinD
-#      run: |
-#        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
-#        chmod +x ./kind
-#        sudo mv ./kind /usr/local/bin/kind
-#        kind create cluster
-#        
-#    - name: Setup kubectl
-#      run: |
-#        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-#        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    - name: Setup KinD
+      run: |
+        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+        chmod +x ./kind
+        sudo mv ./kind /usr/local/bin/kind
+        kind create cluster
+        
+    - name: Setup kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
     
-    - name: Setup KinD with reaydy action
-      uses: helm/kind-action@v1.5.0
+#    - name: Setup KinD with reaydy action
+#      uses: helm/kind-action@v1.5.0
 
-    - name: end_time_kind
+    - name: End KinD
       id: end_time_kind
       run: |
         echo "end_kind=$(date '+%s')" >> $GITHUB_OUTPUT
