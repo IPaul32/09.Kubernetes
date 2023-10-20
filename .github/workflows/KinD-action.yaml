@@ -40,7 +40,7 @@ jobs:
   
     - name: Extract Cluster Info
       run: |
-        kubectlversion=$(kubectl version --short)
+        kubectlversion=$(kubectl version)
         kindversion=$(kind version)
         pods=$(kubectl get pods -A)
         nodes=$(kind get nodes --name kind)
