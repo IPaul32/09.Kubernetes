@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  setup_kind:
+  setup_minikube:
     runs-on: ubuntu-latest
 
     steps:

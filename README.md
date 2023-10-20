@@ -125,4 +125,100 @@ I provide screenshots of the installation and verification of the Minikube clust
 
 ## GitHub Actions for KinD Cluster Setup
 
+### Created a GitHub repository for your Kubernetes-related assignments
+
+
+**_[->Click here <-](https://github.com/IPaul32/09.Kubernetes "Ivanchuk 09.k8s repo")_**
+
+
+### Wrote a GitHub Actions workflow that sets up a KinD cluster.
+_KinD-action.yaml_
+```yaml
+name: Setup KinD Cluster
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  setup_kind:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Start Kind
+      id: start_time_kind
+      run: |
+        echo "start_kind=$(date '+%s')" >> $GITHUB_OUTPUT
+    - name: Setup KinD
+      run: |
+        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+        chmod +x ./kind
+        sudo mv ./kind /usr/local/bin/kind
+        kind create cluster
+        
+    - name: Setup kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    
+#    - name: Setup KinD with reaydy action
+#      uses: helm/kind-action@v1.5.0
+
+    - name: End KinD
+      id: end_time_kind
+      run: |
+        echo "end_kind=$(date '+%s')" >> $GITHUB_OUTPUT
+  
+    - name: Extract Cluster Info
+      run: |
+        kubectlversion=$(kubectl version)
+        kindversion=$(kind version)
+        pods=$(kubectl get pods -A)
+        nodes=$(kind get nodes --name kind)
+        echo "kubectl Version: $kubectlversion" > kind-cluster-info.txt
+        echo "KinD Version: $kindversion" >> kind-cluster-info.txt
+        echo "Pods: $pods" >> kind-cluster-info.txt
+        echo "Nodes: $nodes" >> kind-cluster-info.txt
+        echo "How long spin up (Time): $((${{steps.end_time_kind.outputs.end_kind}} - ${{steps.start_time_kind.outputs.start_kind}})) seconds"  >> kind-cluster-info.txt
+      shell: bash
+
+    - name: Upload KinD Info
+      uses: actions/upload-artifact@v3
+      with:
+        name: kind-cluster-info
+        path: kind-cluster-info.txt
+
+    - name: Cleanup KinD Cluster
+      run: |
+        kind delete cluster
+```
+
+
+I used two methods of installing the KinD cluster, through the action and through the commands that are indicated on the official website
+and came to the conclusion that it is better to use the second option, because this installs the latest version and is a little faster.
+
+### Artifact 
+**_kind-cluster-info.txt_**
+```
+kubectl Version: Client Version: v1.28.3
+Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3
+Server Version: v1.27.3
+
+KinD Version: kind v0.20.0 go1.20.4 linux/amd64
+
+Pods: 
+NAMESPACE     NAME                                         READY   STATUS    RESTARTS   AGE
+kube-system   etcd-kind-control-plane                             1/1   Running     0          4s
+kube-system   kube-apiserver-kind-control-plane                   1/1   Running     0          7s
+skube-system   kube-controller-manager-kind-control-plane         0/1   Running     0          6s
+kube-system   kube-scheduler-kind-control-plane                   0/1   Running     0          4s
+
+Nodes: kind-control-plane
+
+How long spin up (Time): 52 seconds
+```
 
