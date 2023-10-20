@@ -55,7 +55,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: kind-cluster-info
-        path: kinf-cluster-info.txt
+        path: kind-cluster-info.txt
 
     - name: Cleanup KinD Cluster
       run: |
